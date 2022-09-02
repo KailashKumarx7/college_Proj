@@ -1,5 +1,9 @@
 <?php 
 
+// include './dompdf/src/Dompdf.php';
+
+// $pdf = new Dompdf();
+
 if(session_status() == PHP_SESSION_NONE)
 {
 	session_start();//start session if session not start
@@ -211,6 +215,24 @@ if(isset($_SESSION['tracker'])){
 <script src="./assets/js/html2canvas.js"></script>
 <script>
 
+  function printPDF($idd) {
+	document.getElementById("hiddenLayer").style.display='none';
+    html2canvas(document.getElementById($idd), {height: document.body.clientHeight, width: document.body.clientWidth}).then(function (canvas) {
+      var wid;
+      var hgt;
+      var img = canvas.toDataURL("image/png", wid = canvas.width, hgt = canvas.height);
+      var hratio = hgt / wid;
+      var doc = new jsPDF('p', 'pt', 'a4');
+      var width = doc.internal.pageSize.width;
+      var height = width * hratio;
+      doc.addImage(img, 'JPEG', 20, 20, width+30, height+30);
+      const d = new Date();
+      name = 'pdf_'+new Date().toUTCString();
+      // let fname = name + ".pdf";
+      doc.save(name);
+    });
+	document.getElementById("hiddenLayer").style.display='block';
+  }
 </script>
 
 </body>
